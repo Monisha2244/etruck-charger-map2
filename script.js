@@ -1,10 +1,10 @@
-const map = L.map('map').setView([50, 10], 5); 
+const map = L.map('map').setView([50, 10], 5);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
 
-fetch("enriched_chargers.json")
+fetch("chargers_with_highways.json")
   .then(response => response.json())
   .then(data => {
     data.forEach(charger => {
