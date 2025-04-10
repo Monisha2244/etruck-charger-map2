@@ -1,18 +1,13 @@
-// Initialize the map
+// Initialize the Leaflet map
 const map = L.map('map').setView([50, 10], 5);
 
-// Add OpenStreetMap tiles
+// Add OpenStreetMap tile layer
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
 
 //
-// 🔵 Load default charger markers (from chargers_with_highways.json)
-//
-
-
-//
-// 🟠 Load clustered corridor chargers (from chargers_with_corridors.geojson)
+// ✅ Load chargers with clusters (corridor version)
 //
 fetch('data/chargers_with_corridors.geojson')
   .then(res => res.json())
@@ -25,15 +20,17 @@ fetch('data/chargers_with_corridors.geojson')
         const color = getColorByCorridor(corridor);
 
         return L.circleMarker(latlng, {
-          radius: 10,           // Bigger marker
-          fillColor: color,     // Fill color based on corridor
-          color: "#333",        // Border color
+          radius: 10,
+          fillColor: color,
+          color: "#333",
           weight: 2,
           fillOpacity: 1
         }).bindPopup(`
-          <strong>Clustered Charger</strong><br/>
-          Corridor: ${corridor}<br/>
-          Lat: ${latlng.lat.toFixed(4)}, Lon: ${latlng.lng.toFixed(4)}
+          <strong>${feature.properties.title || "Unnamed Charger"}</strong><br/>
+          Country: ${feature.properties.country || "N/A"}<br/>
+          Highway: ${feature.properties.nearest_highway || "Unknown"}<br/>
+          Cluster: ${feature.properties.cluster || "N/A"}<br/>
+          Corridor: ${corridor}
         `);
       }
     }).addTo(map);
@@ -41,7 +38,7 @@ fetch('data/chargers_with_corridors.geojson')
   .catch(err => console.error("Failed to load corridor geojson:", err));
 
 //
-// 🎨 Color function for corridor clusters
+// 🎨 Color assignment for corridor clusters
 //
 function getColorByCorridor(corridor) {
   const colors = [
@@ -51,5 +48,5 @@ function getColorByCorridor(corridor) {
   ];
   if (corridor === "Unclustered") return "#999";
   if (typeof corridor === "number") return colors[corridor % colors.length];
-  return "#000"; // fallback color
+  return "#000";
 }
