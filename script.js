@@ -9,21 +9,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 //
 // 🔵 Load default charger markers (from chargers_with_highways.json)
 //
-fetch("chargers_with_highways.json")
-  .then(response => response.json())
-  .then(data => {
-    data.forEach(charger => {
-      const marker = L.marker([charger.lat, charger.lon]).addTo(map);
-      const popupText = `
-        <strong>${charger.title}</strong><br/>
-        Cluster: ${charger.cluster}<br/>
-        Country: ${charger.country || "N/A"}<br/>
-        Highway: ${charger.nearest_highway || "Unknown"}<br/>
-        Corridor: ${charger.corridor || "TBD"}
-      `;
-      marker.bindPopup(popupText);
-    });
-  });
+
 
 //
 // 🟠 Load clustered corridor chargers (from chargers_with_corridors.geojson)
